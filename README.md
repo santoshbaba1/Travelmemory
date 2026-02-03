@@ -8,15 +8,10 @@ The Travel Memory application is deployed using a scalable and highly available 
 <img width="983" height="1472" alt="tv1 drawio(2)" src="https://github.com/user-attachments/assets/7db799cc-5bce-4cdf-9fef-13238a979c58" />
 
 # 1. User (Client Layer)
-
-    The user accesses the Travel Memory application through a web browser using a custom domain name.
-
+    The user accesses the Travel Memory application through a web browser using a domain name graphtech.live or www.graphtech.live.
     Protocol: HTTPS
-
     Port: 443
-
     Role: Initiates requests to view the application and interact with backend APIs.
-
     All user requests are encrypted using HTTPS to ensure secure communication.
 
 2. Cloudflare DNS and Security Layer
