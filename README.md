@@ -39,7 +39,7 @@ The Travel Memory application is deployed using a scalable and highly available 
       Port: 80
       Health Check Path: /
     The load balancer continuously monitors the health of frontend instances and routes traffic only to healthy targets.
-# 5. Frontend EC2 Instances (Presentation Layer)
+## 5. Frontend EC2 Instances (Presentation Layer)
     Multiple EC2 instances are deployed to serve the frontend application.
       Components:
         React (build version)
