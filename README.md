@@ -7,14 +7,14 @@ The Travel Memory application is deployed using a scalable and highly available 
 
 <img width="983" height="1472" alt="tv1 drawio(2)" src="https://github.com/user-attachments/assets/7db799cc-5bce-4cdf-9fef-13238a979c58" />
 
-# 1. User (Client Layer)
+## 1. User (Client Layer)
     The user accesses the Travel Memory application through a web browser using a domain name graphtech.live or www.graphtech.live.
       Protocol: HTTPS
       Port: 443
       Role: Initiates requests to view the application and interact with backend APIs.
     All user requests are encrypted using HTTPS to ensure secure communication.
 
-# 2. Cloudflare DNS and Security Layer
+## 2. Cloudflare DNS and Security Layer
     Cloudflare acts as the DNS provider and security gateway for the application.
       Responsibilities:
         Resolves domain names (yourdomain.com and api.yourdomain.com)
@@ -23,7 +23,7 @@ The Travel Memory application is deployed using a scalable and highly available 
         Improves performance through caching and CDN
       Traffic Flow:
         Incoming HTTPS requests from users are forwarded to the AWS Application Load Balancer.
-# 3. Application Load Balancer (ALB)
+## 3. Application Load Balancer (ALB)
     An AWS Application Load Balancer is used to distribute incoming traffic efficiently across multiple EC2 instances.
       Listener Configuration:
         HTTP (Port 80)
@@ -32,7 +32,7 @@ The Travel Memory application is deployed using a scalable and highly available 
         Requests with path /api/* are routed to the Backend Target Group
         All other requests (/*) are routed to the Frontend Target Group
     This routing mechanism enables frontend and backend services to operate independently while sharing a single load balancer.
-# 4. Frontend Target Group
+## 4. Frontend Target Group
     The frontend target group contains multiple EC2 instances hosting the React application.
       Configuration:
       Protocol: HTTP
@@ -49,14 +49,14 @@ The Travel Memory application is deployed using a scalable and highly available 
         Handle client-side routing using React
         Respond to user requests routed by the load balancer
         This setup ensures high availability and scalability of the frontend layer.
-# 6. Backend Target Group
+## 6. Backend Target Group
     The backend target group contains EC2 instances running the Node.js API.
       Configuration:
         Protocol: HTTP
         Port: 80
         Health Check Path: /health
       The health check endpoint ensures that only healthy backend instances receive traffic.
-# 7. Backend EC2 Instances (Application Layer)
+## 7. Backend EC2 Instances (Application Layer)
     Multiple EC2 instances are deployed to run the backend services.
       Components:
         Node.js with Express framework
@@ -70,7 +70,7 @@ The Travel Memory application is deployed using a scalable and highly available 
         Communicate with the database
         Process business logic
         Backend instances are not publicly exposed, enhancing security.
-# 8. MongoDB Atlas (Data Layer)
+## 8. MongoDB Atlas (Data Layer)
     MongoDB Atlas is used as a managed NoSQL database service.
       Configuration:
          Protocol: TCP
@@ -79,7 +79,7 @@ The Travel Memory application is deployed using a scalable and highly available 
          Store application data such as user information and travel memories
          Provide secure and scalable data storage
          Only backend EC2 instances are allowed to communicate with MongoDB Atlas, ensuring data security.
-# 9. End-to-End Traffic Flow Summary
+## 9. End-to-End Traffic Flow Summary
     The user sends an HTTPS request via a web browser.
     Cloudflare resolves the domain name and forwards the request securely.
     The Application Load Balancer receives the request.
@@ -88,7 +88,7 @@ The Travel Memory application is deployed using a scalable and highly available 
       API requests are sent to backend EC2 instances.
       Backend services interact with MongoDB Atlas to fetch or store data.
       Responses are sent back to the user through the same secure path.
-# 10. Security and Scalability Highlights
+## 10. Security and Scalability Highlights
     HTTPS encryption using Cloudflare SSL
     Load balancing across multiple EC2 instances
     Backend servers are not publicly accessible
