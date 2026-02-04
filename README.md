@@ -5,7 +5,7 @@
 The Travel Memory application is deployed using a scalable and highly available cloud architecture on Amazon Web Services (AWS). The application follows a three-tier architecture consisting of the presentation layer (frontend), application layer (backend), and data layer (database). The diagram illustrates how user requests flow securely through each component.
 
 
-<img width="983" height="1472" alt="tv1 drawio(2)" src="https://github.com/user-attachments/assets/7db799cc-5bce-4cdf-9fef-13238a979c58" />
+<img width="590" height="884" alt="tv1 drawio(2)" src="https://github.com/user-attachments/assets/7db799cc-5bce-4cdf-9fef-13238a979c58" />
 
 ## 1. User (Client Layer)
     The user accesses the Travel Memory application through a web browser using a domain name graphtech.live or www.graphtech.live.
