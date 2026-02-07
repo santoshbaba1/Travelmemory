@@ -329,10 +329,10 @@ Test:
 
 # cloudflare.com to add DNS Records
 
-Type 	Name 	Value
-A 	     @ 	    13.201.89.94            # FRONTEND SERVER PUBLIC IP
-A 	    www 	13.201.89.94            # FRONTEND SERVER PUBLIC IP
-A 	    api 	13.204.76.181           # BACKEND SERVER PUBLIC IP
+    Type 	Name 	Value
+    A 	     @ 	    13.201.89.94            # FRONTEND SERVER PUBLIC IP
+    A 	    www 	13.201.89.94            # FRONTEND SERVER PUBLIC IP
+    A 	    api 	13.204.76.181           # BACKEND SERVER PUBLIC IP
 
 
 # Frontend Nginx Configuration
@@ -555,110 +555,80 @@ Benefits:
 
 Deploying the Travel Memory MERN application on AWS provided valuable hands-on experience in real-world DevOps practices. This deployment helped bridge the gap between development and production environments while reinforcing best practices for scalability, security, and reliability.
 
-1. Understanding Full-Stack Deployment
+# 1. Understanding Full-Stack Deployment
 
-Through this deployment, I learned how a MERN stack application is structured and deployed in a production environment. Separating the frontend (React) and backend (Node.js) into different servers improved clarity, maintainability, and scalability.
+    Through this deployment, I learned how a MERN stack application is structured and deployed in a production environment. Separating the frontend (React) and backend (Node.js) into     different servers improved clarity, maintainability, and scalability.
 
-2. Importance of Reverse Proxy (Nginx)
+# 2. Importance of Reverse Proxy (Nginx)
 
-Using Nginx as a reverse proxy was a key learning:
+    Using Nginx as a reverse proxy was a key learning:
+    It allowed backend services running on internal ports (3000 and 3001) to be securely exposed via port 80/443.
+    Improved security by preventing direct public access to application ports.
+    Simplified integration with the Application Load Balancer.
 
-It allowed backend services running on internal ports (3000 and 3001) to be securely exposed via port 80/443.
+# 3. Load Balancing and High Availability
 
-Improved security by preventing direct public access to application ports.
+    Implementing an Application Load Balancer (ALB) demonstrated how traffic can be distributed across multiple instances:
+    Multiple frontend and backend EC2 instances ensured high availability.
+    Health checks helped automatically remove unhealthy instances from traffic.
+    Listener rules enabled routing to multiple target groups using a single load balancer.
 
-Simplified integration with the Application Load Balancer.
+# 4. Health Checks and Monitoring
 
-3. Load Balancing and High Availability
+    One of the most important learnings was the role of health checks:
+    Proper health endpoints (/health) are essential for backend services.
+    Incorrect ports or paths result in unhealthy target groups.
+    Health checks are critical for maintaining reliability in production.
 
-Implementing an Application Load Balancer (ALB) demonstrated how traffic can be distributed across multiple instances:
+# 5. Domain and DNS Management
 
-Multiple frontend and backend EC2 instances ensured high availability.
+    Configuring a custom domain using Cloudflare provided insights into:
+    DNS record management (A and CNAME records)
+    Using subdomains Using subdomains www.graphtech.live for frontend services and api.graphtech.live for backend services
+    SSL/TLS termination and DDoS protection via Cloudflare
+    This setup improved both security and user experience.
 
-Health checks helped automatically remove unhealthy instances from traffic.
+# 6. Security Best Practices
 
-Listener rules enabled routing to multiple target groups using a single load balancer.
+    The deployment reinforced several security principles:
+    Backend servers should not be publicly accessible.
+    Sensitive data must be stored in environment variables (.env).
+    Database access should be restricted to backend servers only.
+    Using HTTPS for all client-server communication is essential.
 
-4. Health Checks and Monitoring
+# 7. Cloud Networking and Access Control
 
-One of the most important learnings was the role of health checks:
+    Working with AWS Security Groups helped in understanding:
+    How inbound and outbound traffic is controlled.
+    Allowing traffic only from trusted sources (such as ALB to EC2).
+    Preventing unnecessary exposure of internal services.
 
-Proper health endpoints (/health) are essential for backend services.
+# 8. Scalability and Fault Tolerance
 
-Incorrect ports or paths result in unhealthy target groups.
+    By creating multiple instances and placing them behind a load balancer, I learned:
+    How horizontal scaling improves application resilience.
+    How cloud infrastructure can handle traffic spikes.
+    How stateless frontend and backend services support scaling.
 
-Health checks are critical for maintaining reliability in production.
+# 9. Database as a Managed Service
 
-5. Domain and DNS Management
+    Using MongoDB Atlas highlighted the advantages of managed databases:
+    Reduced operational overhead
+    Built-in backups and scalability
+    Secure connectivity with cloud applications
 
-Configuring a custom domain using Cloudflare provided insights into:
+# 10. Real-World DevOps Experience
 
-DNS record management (A and CNAME records)
-
-Using subdomains Using subdomains www.graphtech.live for frontend services and api.graphtech.live for backend services
-
-SSL/TLS termination and DDoS protection via Cloudflare
-
-This setup improved both security and user experience.
-
-6. Security Best Practices
-
-The deployment reinforced several security principles:
-
-Backend servers should not be publicly accessible.
-
-Sensitive data must be stored in environment variables (.env).
-
-Database access should be restricted to backend servers only.
-
-Using HTTPS for all client-server communication is essential.
-
-7. Cloud Networking and Access Control
-
-Working with AWS Security Groups helped in understanding:
-
-How inbound and outbound traffic is controlled.
-
-Allowing traffic only from trusted sources (such as ALB to EC2).
-
-Preventing unnecessary exposure of internal services.
-
-8. Scalability and Fault Tolerance
-
-By creating multiple instances and placing them behind a load balancer, I learned:
-
-How horizontal scaling improves application resilience.
-
-How cloud infrastructure can handle traffic spikes.
-
-How stateless frontend and backend services support scaling.
-
-9. Database as a Managed Service
-
-Using MongoDB Atlas highlighted the advantages of managed databases:
-
-Reduced operational overhead
-
-Built-in backups and scalability
-
-Secure connectivity with cloud applications
-
-10. Real-World DevOps Experience
-
-Overall, this deployment provided practical experience in:
-
-Cloud infrastructure management
-
-Production-ready application deployment
-
-Debugging real-world issues such as unhealthy target groups and CORS errors
-
-Designing scalable and secure architectures
+    Overall, this deployment provided practical experience in:
+    Cloud infrastructure management
+    Production-ready application deployment
+    Debugging real-world issues such as unhealthy target groups and CORS errors
+    Designing scalable and secure architectures
 
 # Conclusion
 
-This project strengthened my understanding of DevOps workflows, cloud-native architecture, and production deployments. The hands-on challenges encountered during deployment significantly improved my troubleshooting skills and confidence in deploying real-world applications.
+    This project strengthened my understanding of DevOps workflows, cloud-native architecture, and production deployments. The hands-on challenges encountered during deployment           significantly improved my troubleshooting skills and confidence in deploying real-world applications.
 
-Author:
-Santosh Kumar Sharma
+# Author:
+## Santosh Kumar Sharma
 
