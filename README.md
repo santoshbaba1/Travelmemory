@@ -97,37 +97,566 @@ The Travel Memory application is deployed using a scalable and highly available 
     Horizontal scalability for both frontend and backend layers
     High availability through health checks and automatic traffic rerouting
 
+# Application Deployment 
+## Tech Stack
 
+    Frontend: React.js
+    Backend: Node.js, Express.js
+    Database: MongoDB Atlas
+    Cloud: AWS EC2, ALB, ASG, ACM
+    Web Server: Nginx
+    Process Manager: PM2
+    Domain & DNS: Cloudflare
+    SSL: Encrypt Certbot or AWS ACM
 
+# Backend Deployment on AWS EC2
+Step 1: Launch EC2 Instance
 
+    Launch an Ubuntu EC2 instance.
+    Name: travel-memory-backend
+    
+    Create security group
+    Name: tv-sg
+    Open ports: (22,80,3000,3001)
+    Select security group (tv-sg) for instance.
+    Connect via SSH.
 
-`.env` file to work with the backend after creating a database in mongodb: 
+Step 2: Install Required Packages for backend server
 
-```
-MONGO_URI='ENTER_YOUR_URL'
+sudo bash
+sudo apt update -y
+sudo apt install nodejs -y
+sudo apt install npm -y
+
+nodejs -v
+npm -v
+
+Step 3: Clone Backend Repository
+
+sudo bash
+cd ~
+git clone https://github.com/UnpredictablePrashant/TravelMemory.git
+
+Step 4: Create .env File
+cd TravelMemory/backend
+nano .env
+
+Add:
 PORT=3001
-```
+MONGO_URI=mongodb+srv://santosharma:2TNVQJuGsJvRy0pT@travelmemorydb.0kzvz9q.mongodb.net/travelmemory
 
-Data format to be added: 
+Save and exit.
 
-```json
-{
-    "tripName": "Incredible India",
-    "startDateOfJourney": "19-03-2022",
-    "endDateOfJourney": "27-03-2022",
-    "nameOfHotels":"Hotel Namaste, Backpackers Club",
-    "placesVisited":"Delhi, Kolkata, Chennai, Mumbai",
-    "totalCost": 800000,
-    "tripType": "leisure",
-    "experience": "Lorem Ipsum, Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum,Lorem Ipsum, ",
-    "image": "https://t3.ftcdn.net/jpg/03/04/85/26/360_F_304852693_nSOn9KvUgafgvZ6wM0CNaULYUa7xXBkA.jpg",
-    "shortDescription":"India is a wonderful country with rich culture and good people.",
-    "featured": true
+Step 5: Install Dependencies
+
+npm install
+
+Step 6: Start Backend Server
+
+node index.js
+
+Backend server runs:
+
+BACKEND_EC2_IP= 13.204.76.181
+
+Open url in browser http://<BACKEND_EC2_IP>:3001
+
+Test connection and API
+url http://<BACKEND_EC2_IP>:3001/hello
+output:Hello World
+
+# MongoDB Atlas Setup & Compass Connection
+Step 1: Log in
+
+    Visit: https://cloud.mongodb.com/
+    Log into mongo cloud
+
+Step 2: Create Organization and Project
+Step 3: Create Cluster
+
+    Name: travelmemorydb
+    Select M0 Free Plan
+    Create Deployment
+
+Step 4: Create Database User
+
+    Go to Database Access
+    Add new user (username and password)
+
+Step 5: Configure Network Access from anywhere
+
+    Add IP:
+
+    0.0.0.0/0
+
+    For production, restrict to trusted IPs. (allow only spacific IP or network)
+
+Step 6: Connect MongoDB Compass
+
+    Connect to Compass
+    Copy connection string.
+
+Example
+mongodb+srv://<username>:<password>@cluster0.mongodb.net/?retryWrites=true&w=majority
+
+Step 7: Connect Using Compass
+
+    Open MongoDB Compass
+    Paste connection string with username and password
+    Connect
+
+# Frontend Deployment on AWS EC2
+Step 1: Launch EC2 Instance
+
+    Launch Ubuntu EC2
+    Name : travel-memory-frontend
+    Select security group (tv-sg), same as per backend instance for this instance.
+    Connect via SSH.
+
+Step 2: Install Required Packages for frontend server
+
+sudo bash
+sudo apt update -y
+sudo apt install nodejs -y
+sudo apt install npm -y
+
+nodejs -v
+npm -v
+
+Step 3: Clone Frontend Repository
+
+sudo bash
+cd ~
+git clone https://github.com/UnpredictablePrashant/TravelMemory.git
+
+
+Step 4: Create .env File
+cd TravelMemory/frontend
+nano .env
+
+Add:
+
+REACT_APP_BACKEND_URL=http://<BACKEND_EC2_IP>:3001
+
+Step 5: Install Dependencies
+
+npm install
+
+Step 6: Start Frontend Server
+
+npm start
+
+Frontend server runs.
+
+FRONTEND_EC2_IP= 13.201.89.94
+
+open url in browser http://<FRONTEND_EC2_IP>:3000
+
+Frontpage of Travel Memory application open
+
+# To avoide Port no in url, reverse proxy server needs to install.
+For Reverse Proxy use Nginx server
+Frontend (Port 3000 → Port 80)
+
+# Connect via SSH to Frontend Server
+sudo bash
+sudo apt install nginx -y
+nano /etc/nginx/sites-available/default
+
+# Modifiy default nginx file to reverse proxy:
+
+server {
+    listen 80;
+    #server_name _;
+
+    location / {
+        proxy_pass http://<FRONTEND_EC2_IP>:3000;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
 }
-```
+
+Reload:
+
+nginx -t
+systemctl reload nginx
+
+Test:
+
+http://<FRONTEND_EC2_IP>
+
+# Backend Server reverse proxy
+To avoide Port no in url, reverse proxy server needs to install.
+For Reverse Proxy use Nginx server
+
+Backend (Port 3001 → Port 80)
+
+nano /etc/nginx/sites-available/default
+
+Modifiy nginx default file:
+
+server {
+    listen 80;
+    # server_name _;
+
+    location / {
+        proxy_pass http://<BACKEND_EC2_IP>:3001;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+Reload:
+
+nginx -t
+systemctl reload nginx
+
+Test:
+Open in browser http://<BACKEND_EC2_IP>/hello
+output= Hello World
+
+# Custom Domains interigation with Nginx
+Domains Name Used for Server:
+
+    Frontend: graphtech.live
+              www.graphtech.live
+    Backend: api.graphtech.live
+
+# cloudflare.com to add DNS Records
+Type 	Name 	Value
+A 	     @ 	    13.201.89.94            # FRONTEND SERVER PUBLIC IP
+A 	    www 	13.201.89.94            # FRONTEND SERVER PUBLIC IP
+A 	    api 	13.204.76.181           # BACKEND SERVER PUBLIC IP
 
 
-For frontend, you need to create `.env` file and put the following content (remember to change it based on your requirements):
-```bash
-REACT_APP_BACKEND_URL=http://localhost:3001
-```
+# Frontend Nginx Configuration
+server {
+    listen 80;
+    server_name graphtech.live www.graphtech.live;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+# Backend Nginx Configuration
+server {
+    listen 80;
+    server_name api.graphtech.live;
+
+    location / {
+        proxy_pass http://localhost:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+Reload:
+
+nginx -t
+systemctl reload nginx
+
+# Configure Secure connection on both server
+
+## Enable HTTPS with Certbot for Frontend
+
+sudo bash
+cd ~
+apt install certbot python3-certbot-nginx -y
+certbot --nginx -d graphtech.live -d www.graphtech.live
+
+Final HTTPS URLs
+
+    https://graphtech.live
+    https://www.graphtech.live
+
+# Final frontend Nginx (Reverse Proxy ) Config after SSL
+server {
+    listen 80;
+    server_name graphtech.live www.graphtech.live;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/graphtech.live/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/graphtech.live/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+server {
+    if ($host = www.graphtech.live) {
+        return 301 https://$host$request_uri;
+    }
+
+    if ($host = graphtech.live) {
+        return 301 https://$host$request_uri;
+    }
+
+    listen 80;
+    server_name graphtech.live www.graphtech.live;
+    return 404;
+}
+
+
+
+## Enable HTTPS with Certbot for Backend Server
+
+sudo certbot --nginx -d api.graphtech.live
+
+# Final Backend Nginx (Reverse Proxy) Config after SSL
+
+    https://api.graphtech.live
+
+server {
+    listen 80;
+    server_name api.graphtech.live;
+
+    location / {
+        proxy_pass http://localhost:3001;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/api.graphtech.live/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.graphtech.live/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+}
+server {
+    if ($host = api.graphtech.live) {
+        return 301 https://$host$request_uri;
+    }
+
+
+    listen 80;
+    server_name api.graphtech.live;
+    return 404;
+
+}
+
+# Failover and Load balancer Configuration
+Create AMI image of Frontend and Backend Servers
+      Frontend : front-ami
+      Backend  : back-ami
+Create Template
+    Launch Template
+    Frontend 
+      Name: front-ami-tmp
+    Backend 
+      Name: back-ami-tmp
+
+
+Step 1: Create Target Group for Frontend Server
+
+    Name: TG-forntend
+    Target type: Instances
+    Protocol: HTTPS
+    Port: 443
+    Register EC2 instances for Frontend
+    Check status healthy
+
+Step 2: Create Target Group for Backend Server
+
+    Name: TG-backend
+    Target type: Instances
+    Protocol: HTTPS
+    Port: 443
+    Register EC2 instances for Backend
+    Check status healthy
+
+    # Load Balancer Setup Application Load Balancer (ALB)
+Step 3: Create ALB
+
+    Name: travel-memory-alb
+    Scheme: Internet-facing
+    IP Type: IPv4
+    Select same AZs as EC2
+    Zone: More then one zone select
+
+Step 4: Attach both Target Group to ALB.
+    1 : Target group (TG-frontend) with ALB (travel-memory-alb)
+    2 : Target group (TG-backend) with ALB (travel-memory-alb)
+
+Step 4: Test Load Balancer
+
+http://tm-alb-32463030.ap-south-1.elb.amazonaws.com
+
+AWS Certificate Manager (ACM)
+
+    Certificate ARN:
+    arn:aws:acm:ap-south-1:233245302554:certificate/cc3667a6-3da5-4921-84f9-fd6293be7300
+
+    Domain Secured: www.graphtech.live
+
+
+# cloudflare.com to add DNS Records
+Type 	     CNAME         
+Name  : _8225cd4c2e13acd764f43cb0c92d493b.alb.
+Value :	_6ebe4648fd9d4bdcd105665671857019.jkddzztszm.acm-validations.aws              
+
+
+Step 5: Auto Scaling Group (ASG)
+
+    ASG Name: tm-frontend-asg
+    Launch Template: front-ami-tmp
+    Min: 1
+    Desired: 1
+    Max: 2
+    
+    ASG Name: tm-backend-asg
+    Launch Template: front-ami-tmp
+    Min: 1
+    Desired: 1
+    Max: 2
+
+
+Benefits:
+
+    Auto recovery
+    Auto scaling
+    Zero-downtime deployments
+
+## Deployment Complete!
+
+# Learnings from Deployment
+
+Deploying the Travel Memory MERN application on AWS provided valuable hands-on experience in real-world DevOps practices. This deployment helped bridge the gap between development and production environments while reinforcing best practices for scalability, security, and reliability.
+
+1. Understanding Full-Stack Deployment
+
+Through this deployment, I learned how a MERN stack application is structured and deployed in a production environment. Separating the frontend (React) and backend (Node.js) into different servers improved clarity, maintainability, and scalability.
+
+2. Importance of Reverse Proxy (Nginx)
+
+Using Nginx as a reverse proxy was a key learning:
+
+It allowed backend services running on internal ports (3000 and 3001) to be securely exposed via port 80/443.
+
+Improved security by preventing direct public access to application ports.
+
+Simplified integration with the Application Load Balancer.
+
+3. Load Balancing and High Availability
+
+Implementing an Application Load Balancer (ALB) demonstrated how traffic can be distributed across multiple instances:
+
+Multiple frontend and backend EC2 instances ensured high availability.
+
+Health checks helped automatically remove unhealthy instances from traffic.
+
+Listener rules enabled routing to multiple target groups using a single load balancer.
+
+4. Health Checks and Monitoring
+
+One of the most important learnings was the role of health checks:
+
+Proper health endpoints (/health) are essential for backend services.
+
+Incorrect ports or paths result in unhealthy target groups.
+
+Health checks are critical for maintaining reliability in production.
+
+5. Domain and DNS Management
+
+Configuring a custom domain using Cloudflare provided insights into:
+
+DNS record management (A and CNAME records)
+
+Using subdomains Using subdomains www.graphtech.live for frontend services and api.graphtech.live for backend services
+
+SSL/TLS termination and DDoS protection via Cloudflare
+
+This setup improved both security and user experience.
+
+6. Security Best Practices
+
+The deployment reinforced several security principles:
+
+Backend servers should not be publicly accessible.
+
+Sensitive data must be stored in environment variables (.env).
+
+Database access should be restricted to backend servers only.
+
+Using HTTPS for all client-server communication is essential.
+
+7. Cloud Networking and Access Control
+
+Working with AWS Security Groups helped in understanding:
+
+How inbound and outbound traffic is controlled.
+
+Allowing traffic only from trusted sources (such as ALB to EC2).
+
+Preventing unnecessary exposure of internal services.
+
+8. Scalability and Fault Tolerance
+
+By creating multiple instances and placing them behind a load balancer, I learned:
+
+How horizontal scaling improves application resilience.
+
+How cloud infrastructure can handle traffic spikes.
+
+How stateless frontend and backend services support scaling.
+
+9. Database as a Managed Service
+
+Using MongoDB Atlas highlighted the advantages of managed databases:
+
+Reduced operational overhead
+
+Built-in backups and scalability
+
+Secure connectivity with cloud applications
+
+10. Real-World DevOps Experience
+
+Overall, this deployment provided practical experience in:
+
+Cloud infrastructure management
+
+Production-ready application deployment
+
+Debugging real-world issues such as unhealthy target groups and CORS errors
+
+Designing scalable and secure architectures
+
+# Conclusion
+
+This project strengthened my understanding of DevOps workflows, cloud-native architecture, and production deployments. The hands-on challenges encountered during deployment significantly improved my troubleshooting skills and confidence in deploying real-world applications.
+
+Author:
+Santosh Kumar Sharma
+
