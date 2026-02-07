@@ -130,6 +130,8 @@ Step 2: Install Required Packages for backend server
 
     nodejs -v
     npm -v
+<img width="892" height="335" alt="be ec2" src="https://github.com/user-attachments/assets/31b9c128-2999-4a9a-955d-7a6aa7f26413" />
+<img width="1352" height="255" alt="apt-upgrade" src="https://github.com/user-attachments/assets/5684138b-3cc2-4c4f-8448-2e23cb61bf30" />
 
 Step 3: Clone Backend Repository
 
@@ -141,6 +143,7 @@ Step 4: Create .env File
     
     cd TravelMemory/backend
     nano .env
+<img width="1350" height="717" alt="tm tree" src="https://github.com/user-attachments/assets/f011e2be-ce0f-4e72-a774-c63d98570ff0" />
 
 Add:
 
@@ -160,7 +163,8 @@ Step 6: Start Backend Server
     BACKEND_EC2_IP= 13.204.76.181
     Open url in browser http://<BACKEND_EC2_IP>:3001
 
-Test connection and API
+Test <img width="1348" height="437" alt="BE package" src="https://github.com/user-attachments/assets/d41a675e-bd7f-44ed-9643-6812e9298f46" />
+connection and API
 
     url http://<BACKEND_EC2_IP>:3001/hello
     output:Hello World
@@ -177,6 +181,8 @@ Step 3: Create Cluster
     Name: travelmemorydb
     Select M0 Free Plan
     Create Deployment
+<img width="1363" height="716" alt="mongoDB-1" src="https://github.com/user-attachments/assets/20467afe-0d86-4ec3-97ba-8b41781c54f1" />    
+<img width="1363" height="716" alt="mongoDB-1" src="https://github.com/user-attachments/assets/fd06ea82-3cff-43cf-a30b-4380f73ace0f" />
 
 Step 4: Create Database User
 
@@ -220,6 +226,7 @@ Step 2: Install Required Packages for frontend server
 
     nodejs -v
     npm -v
+<img width="1349" height="178" alt="npm inst" src="https://github.com/user-attachments/assets/89cce7eb-53b0-45a1-aa63-e3c7581e3658" />
 
 Step 3: Clone Frontend Repository
 
@@ -239,6 +246,7 @@ Step 4: Create .env File
 Step 5: Install Dependencies
 
     npm install
+<img width="1350" height="63" alt="npm insta" src="https://github.com/user-attachments/assets/12390058-84c3-4455-8d06-57ab5cf4d5aa" />
 
 Step 6: Start Frontend Server
 
@@ -334,6 +342,7 @@ Test:
     A 	    www 	13.201.89.94            # FRONTEND SERVER PUBLIC IP
     A 	    api 	13.204.76.181           # BACKEND SERVER PUBLIC IP
 
+<img width="502" height="411" alt="cert r" src="https://github.com/user-attachments/assets/6d11d8cc-446b-4d73-828b-6a678fcfa05b" />
 
 # Frontend Nginx Configuration
     server {
@@ -425,6 +434,7 @@ Final HTTPS URLs
 ## Enable HTTPS with Certbot for Backend Server
 
     sudo certbot --nginx -d api.graphtech.live
+<img width="988" height="231" alt="certbot cmd" src="https://github.com/user-attachments/assets/ad9c9adc-7208-4c57-afe3-477683050399" />
 
 # Final Backend Nginx (Reverse Proxy) Config after SSL
 
@@ -476,6 +486,7 @@ Final HTTPS URLs
     Backend 
       Name: back-ami-tmp
 
+<img width="892" height="419" alt="alb 1" src="https://github.com/user-attachments/assets/34da8f21-386c-4ec5-9dd7-0aa583fef729" />
 
 Step 1: Create Target Group for Frontend Server
 
@@ -485,6 +496,7 @@ Step 1: Create Target Group for Frontend Server
     Port: 443
     Register EC2 instances for Frontend
     Check status healthy
+<img width="911" height="413" alt="alb 2" src="https://github.com/user-attachments/assets/da554bdf-b49e-413d-be70-64706f14a125" />
 
 Step 2: Create Target Group for Backend Server
 
@@ -520,6 +532,8 @@ AWS Certificate Manager (ACM)
 
     Domain Secured: www.graphtech.live
 
+<img width="935" height="414" alt="alb cert 1" src="https://github.com/user-attachments/assets/cad8d332-a113-461f-b06e-021cad069c77" />
+<img width="822" height="382" alt="alb cert" src="https://github.com/user-attachments/assets/c9989ed0-fc03-4d8f-bd04-003fbb238cec" />
 
 # cloudflare.com to add DNS Records
 
@@ -541,7 +555,9 @@ Step 5: Auto Scaling Group (ASG)
     Min: 1
     Desired: 1
     Max: 2
+<img width="882" height="415" alt="asg " src="https://github.com/user-attachments/assets/72411fa9-7189-45bf-a607-5306cc34841f" />
 
+<img width="869" height="405" alt="asg" src="https://github.com/user-attachments/assets/09cd7917-d77e-4e74-9ef2-4ea69cc9be44" />
 
 Benefits:
 
