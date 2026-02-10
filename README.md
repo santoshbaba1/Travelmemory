@@ -149,7 +149,7 @@ Step 4: Create .env File
 Add:
 
     PORT=3001
-    MONGO_URI=mongodb+srv://santosharma:2TNVQJuGsJvRy0pT@travelmemorydb.0kzvz9q.mongodb.net/travelmemory
+    MONGO_URI=mongodb+srv://santosharma:2TNVQZqasJvRy0pT@travelmemorydb.0kzvz9q.mongodb.net/travelmemory
 
     Save and exit.
 
