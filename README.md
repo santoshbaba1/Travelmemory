@@ -655,5 +655,5 @@ Deploying the Travel Memory MERN application on AWS provided valuable hands-on e
     This project strengthened my understanding of DevOps workflows, cloud-native architecture, and production deployments. The hands-on challenges encountered during deployment           significantly improved my troubleshooting skills and confidence in deploying real-world applications.
 
 # Author:
-## Santosh Kumar Sharma
+## Santosh Kumar Sharma (12394), Batch 15
 
